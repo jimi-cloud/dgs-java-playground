@@ -1,8 +1,9 @@
 type Query {
-    shows: [Show]
+    shows(titleFilter: String): [Show]
+    show(id: ID!): Show
 }
 
 type Show {
-    name: String!
+    title: String
     releaseYear: Int
 }

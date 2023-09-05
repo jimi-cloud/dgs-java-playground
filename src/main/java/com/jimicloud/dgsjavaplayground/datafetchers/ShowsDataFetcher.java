@@ -33,6 +33,8 @@ public class ShowsDataFetcher {
         if (titleFilter == null) {
             return showsDataLoader.load(null).join();
         }
-        return showsDataLoader.load(null).join().stream().filter(show -> show.title().contains(titleFilter)).toList();
+        return showsDataLoader.load(null).join().stream()
+                .filter(show -> show.title().contains(titleFilter))
+                .toList();
     }
 }

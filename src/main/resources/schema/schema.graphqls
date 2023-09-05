@@ -3,7 +3,24 @@ type Query {
     show(id: ID!): Show
 }
 
-type Show {
+type Show @key(fields: "id") {
+    id: ID!
     title: String
     releaseYear: Int
+}
+
+extend type Query {
+    reviews(showId: ID): [Review]
+    review(id: ID!): Review
+}
+
+extend type Show {
+    reviews: [Review]
+}
+
+type Review {
+    id: ID!
+    showId: String
+    comment: String
+    rating: Int
 }

@@ -1,18 +1,30 @@
 package com.jimicloud.dgsjavaplayground.datafetchers;
 
+import com.jimicloud.dgsjavaplayground.dataloaders.ReviewsDataLoader;
 import com.jimicloud.dgsjavaplayground.models.Review;
+import com.jimicloud.dgsjavaplayground.models.Show;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
-import graphql.schema.DataFetchingEnvironment;
-import org.dataloader.DataLoader;
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
+import com.netflix.graphql.dgs.DgsQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @DgsComponent
 public class ReviewsDataFetcher {
-    @DgsData(parentType = "Show", field = "reviews")
-    public CompletableFuture<Review> review(DataFetchingEnvironment dfe) {
-        DataLoader<String, Review> dataLoader = dfe.getDataLoader("reviews");
-        return dataLoader.load(dfe.getArgument("id"));
+    @Autowired
+    ReviewsDataLoader reviewsDataLoader;
+
+    @DgsData(parentType = "Show")
+    public CompletableFuture<List<Review>> reviews(DgsDataFetchingEnvironment dfe) {
+        Show source = dfe.getSource();
+        return reviewsDataLoader.load(List.of(source.id()));
+    }
+
+    @DgsQuery
+    public List<Review> reviews() {
+        return reviewsDataLoader.load(null).join();
     }
 }

@@ -19,7 +19,7 @@ public class ReviewsMongoRepository implements ReviewsRepository {
         return mongoClient.getDatabase("dgs-java-playground").getCollection("reviews")
                 .find(Filters.eq("showId", showId))
                 .map(doc -> new Review(
-                        doc.getString("_id"),
+                        doc.getString("id"),
                         doc.getString("showId"),
                         doc.getString("comment"),
                         doc.getInteger("rating")

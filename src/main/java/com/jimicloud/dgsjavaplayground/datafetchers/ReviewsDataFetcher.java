@@ -7,15 +7,17 @@ import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 import com.netflix.graphql.dgs.DgsQuery;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @DgsComponent
 public class ReviewsDataFetcher {
-    @Autowired
-    ReviewsDataLoader reviewsDataLoader;
+    final ReviewsDataLoader reviewsDataLoader;
+
+    public ReviewsDataFetcher(ReviewsDataLoader reviewsDataLoader) {
+        this.reviewsDataLoader = reviewsDataLoader;
+    }
 
     @DgsData(parentType = "Show")
     public CompletableFuture<List<Review>> reviews(DgsDataFetchingEnvironment dfe) {

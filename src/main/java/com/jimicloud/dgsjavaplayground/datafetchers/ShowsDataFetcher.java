@@ -1,5 +1,6 @@
 package com.jimicloud.dgsjavaplayground.datafetchers;
 
+import com.jimicloud.dgsjavaplayground.dataloaders.ShowsDataLoader;
 import com.jimicloud.dgsjavaplayground.models.Show;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
@@ -10,23 +11,28 @@ import java.util.List;
 @DgsComponent
 public class ShowsDataFetcher {
 
-    private static final List<Show> shows = List.of(
-            new Show("1", "Stranger Things", 2016, null),
-            new Show("2", "Ozark", 2017, null),
-            new Show("3", "The Crown", 2016, null),
-            new Show("4", "Below Deck", 2012, null)
-    );
+    private final ShowsDataLoader showsDataLoader;
+
+    public ShowsDataFetcher(ShowsDataLoader showsDataLoader) {
+        this.showsDataLoader = showsDataLoader;
+    }
 
     @DgsQuery
     public Show show(@InputArgument String id) {
-        return shows.stream().filter(show -> show.id().equals(id)).findFirst().orElse(null);
+        if (id != null) {
+            List<Show> shows = showsDataLoader.load(List.of(id)).join();
+            if (!shows.isEmpty()) {
+                return shows.get(0);
+            }
+        }
+        return null;
     }
 
     @DgsQuery
     public List<Show> shows(@InputArgument String titleFilter) {
         if (titleFilter == null) {
-            return shows;
+            return showsDataLoader.load(null).join();
         }
-        return shows.stream().filter(show -> show.title().contains(titleFilter)).toList();
+        return showsDataLoader.load(null).join().stream().filter(show -> show.title().contains(titleFilter)).toList();
     }
 }

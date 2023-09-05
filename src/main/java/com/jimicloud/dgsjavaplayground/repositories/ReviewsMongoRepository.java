@@ -16,7 +16,8 @@ public class ReviewsMongoRepository implements ReviewsRepository {
 
     @Override
     public List<Review> findByShowId(String showId) {
-        return mongoClient.getDatabase("dgs-java-playground").getCollection("reviews")
+        return mongoClient.getDatabase("dgs-java-playground")
+                .getCollection("reviews")
                 .find(Filters.eq("showId", showId))
                 .map(doc -> new Review(
                         doc.getString("id"),

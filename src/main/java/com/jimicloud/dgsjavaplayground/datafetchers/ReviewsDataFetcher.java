@@ -3,10 +3,7 @@ package com.jimicloud.dgsjavaplayground.datafetchers;
 import com.jimicloud.dgsjavaplayground.dataloaders.ReviewsDataLoader;
 import com.jimicloud.dgsjavaplayground.models.Review;
 import com.jimicloud.dgsjavaplayground.models.Show;
-import com.netflix.graphql.dgs.DgsComponent;
-import com.netflix.graphql.dgs.DgsData;
-import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
-import com.netflix.graphql.dgs.DgsQuery;
+import com.netflix.graphql.dgs.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,7 +23,8 @@ public class ReviewsDataFetcher {
     }
 
     @DgsQuery
-    public List<Review> reviews() {
-        return reviewsDataLoader.load(null).join();
+    public List<Review> reviews(@InputArgument String showId) {
+        return reviewsDataLoader.load(List.of(showId))
+                .join();
     }
 }
